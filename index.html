@@ -68,13 +68,23 @@
     window.location.href = url;
   }
 
-  // Show button and auto-jump — same timing as original
+  // Auto-jump to WeChat
   link.href = jumpUrl;
   link.style.display = 'inline-block';
 
   setTimeout(function() {
     autoJump(jumpUrl);
   }, 500);
+
+  // After WeChat redirect attempt, show QR.jpg as fallback
+  setTimeout(function() {
+    img.src = 'QR.jpg';
+    img.style.width = '80%';
+    img.style.borderRadius = '12px';
+    document.title = '截图扫码';
+    text.innerHTML = '<span style="color:#999;font-size:15px;">截图扫码</span>';
+    link.style.display = 'none';
+  }, 2500);
 
 })(document);
 </script>
