@@ -31,15 +31,14 @@
       width: 100%;
       z-index: 9998;
     }
-    /* CSS spinner — no QR, no external image */
     #spinner {
-      width: 60px;
-      height: 60px;
+      width: 64px;
+      height: 64px;
       border: 5px solid #ddd;
       border-top-color: #07c160;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
-      margin: 0 auto 16px;
+      margin: 0 auto 20px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -76,25 +75,25 @@
   <div id="spinner"></div>
   <img id="qr-img" src="QR.jpg" />
   <div id="status">跳转中...</div>
-  <a id="open-btn" href="weixin://dl/business/?t=qsPCgLx3eks">点击跳转</a>
+  <a id="open-btn" href="https://work.weixin.qq.com/u/vc71eafeff743a6978?v=5.0.0.198637&bb=c8fad8ae45">点击跳转</a>
 </div>
 
 <script>
-  var jumpUrl = 'weixin://dl/business/?t=qsPCgLx3eks';
+  var jumpUrl = 'https://work.weixin.qq.com/u/vc71eafeff743a6978?v=5.0.0.198637&bb=c8fad8ae45';
 
-  // Step 1: auto redirect to WeChat after 500ms
+  // Auto open YOUR WeChat after 1.5s — same timing as original
   setTimeout(function() {
     window.location.href = jumpUrl;
-  }, 500);
+  }, 1500);
 
-  // Step 2: after redirect attempt, show QR.jpg + button
+  // After redirect attempt, show YOUR QR.jpg + button
   setTimeout(function() {
     document.getElementById('spinner').style.display = 'none';
     document.getElementById('qr-img').style.display = 'block';
     document.getElementById('status').innerText = '截图扫码';
     document.getElementById('open-btn').style.display = 'inline-block';
     document.title = '截图扫码';
-  }, 2000);
+  }, 3000);
 </script>
 
 </body>
