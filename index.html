@@ -4,84 +4,79 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
   <meta name="format-detection" content="telephone=no, email=no">
-  <title>截图扫码</title>
+  <title></title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
+      background-repeat: no-repeat;
+      background-position: left top;
       background-color: #efeff4;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    /* Top SSL bar — exact same as original */
-    #ssl-bar {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 45px;
-      line-height: 45px;
-      background: rgba(7,193,96,0.05);
-      color: #07c160;
-      font-size: 13px;
-      text-align: center;
-      z-index: 9999;
-    }
-
-    /* Center container */
-    #main {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      width: 100%;
-      z-index: 9998;
-    }
-
-    /* QR image — same style as original */
-    #qr-img {
-      width: 70%;
-      max-width: 500px;
-      display: block;
-      margin: 0 auto 10px;
-      border-radius: 8px;
-    }
-
-    /* Loading gif shown before QR */
-    #loading-gif {
-      width: 70%;
-      max-width: 500px;
-      display: block;
-      margin: 0 auto 10px;
-    }
-
-    #label {
-      color: #999;
-      font-size: 15px;
+      background-size: 100%;
+      padding: 0;
+      margin: 0;
     }
   </style>
 </head>
 <body>
+<script>
+(function(d){
+  document.title = '跳转中';
 
-  <div id="ssl-bar">✅ 本页面已经过SSL安全加密</div>
+  // SSL bar — same as original
+  var tips = document.createElement('div');
+  tips.innerText = '✅ 本页面已经过SSL安全加密';
+  tips.style.cssText =
+    'position:fixed;top:0;left:0;width:100%;height:45px;line-height:45px;' +
+    'background:rgba(7,193,96,0.05);color:#07c160;font-size:13px;text-align:center;z-index:9999;';
+  document.body.appendChild(tips);
 
-  <div id="main">
-    <!-- Loading gif shown first, then replaced by QR -->
-    <img id="loading-gif" src="https://p4.ssl.qhimg.com/t11b673bcd67c7f3b837622a705.gif" />
-    <img id="qr-img" src="QR.jpg" style="display:none;" />
-    <div id="label"><span style="color:#999;font-size:15px;">截图扫码</span></div>
-  </div>
+  // Center container
+  var div = document.createElement('div');
+  div.style.cssText =
+    'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);' +
+    'text-align:center;width:100%;z-index:9998;';
 
-  <script>
-    // Show loading for 1 second, then reveal QR — same behavior as original
-    setTimeout(function() {
-      document.getElementById('loading-gif').style.display = 'none';
-      document.getElementById('qr-img').style.display = 'block';
-    }, 1000);
-  </script>
+  // Loading gif — same URL as original
+  var img = document.createElement('img');
+  img.src = 'https://p4.ssl.qhimg.com/t11b673bcd67c7f3b837622a705.gif';
+  img.style.cssText = 'width:70%;max-width:500px;display:block;margin:0 auto 10px;';
 
+  // Status text
+  var text = document.createElement('div');
+  text.innerHTML = '<span style="color:#999;font-size:15px;">跳转中...</span>';
+
+  // Jump button — same as original
+  var link = document.createElement('a');
+  link.innerText = '点击跳转';
+  link.href = 'javascript:void(0)';
+  link.style.cssText =
+    'display:none;margin-top:15px;padding:12px 40px;font-size:16px;' +
+    'border-radius:20px;background:#07c160;color:#fff;text-decoration:none;' +
+    'cursor:pointer;';
+
+  div.appendChild(img);
+  div.appendChild(text);
+  div.appendChild(link);
+  document.body.appendChild(div);
+
+  // WeChat deep link — same as original
+  var jumpUrl = 'weixin://dl/business/?t=qsPCgLx3eks';
+  var jumped = false;
+
+  function autoJump(url) {
+    if (jumped) return;
+    jumped = true;
+    window.location.href = url;
+  }
+
+  // Show button and auto-jump — same timing as original
+  link.href = jumpUrl;
+  link.style.display = 'inline-block';
+
+  setTimeout(function() {
+    autoJump(jumpUrl);
+  }, 500);
+
+})(document);
+</script>
 </body>
 </html>
