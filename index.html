@@ -4,12 +4,11 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
   <meta name="format-detection" content="telephone=no, email=no">
-  <title>截图扫码</title>
+  <title>跳转中</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background-color: #efeff4;
-      padding: 0;
-      margin: 0;
     }
     #ssl-bar {
       position: fixed;
@@ -32,15 +31,32 @@
       width: 100%;
       z-index: 9998;
     }
+    /* CSS spinner — no QR, no external image */
+    #spinner {
+      width: 60px;
+      height: 60px;
+      border: 5px solid #ddd;
+      border-top-color: #07c160;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
     #qr-img {
+      display: none;
       width: 80%;
       max-width: 500px;
-      display: block;
       margin: 0 auto 16px;
       border-radius: 12px;
     }
+    #status {
+      color: #999;
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
     #open-btn {
-      display: inline-block;
+      display: none;
       margin-top: 10px;
       padding: 12px 40px;
       font-size: 16px;
@@ -49,12 +65,6 @@
       color: #fff;
       text-decoration: none;
       cursor: pointer;
-      border: none;
-    }
-    #label {
-      color: #999;
-      font-size: 15px;
-      margin-bottom: 12px;
     }
   </style>
 </head>
@@ -63,16 +73,28 @@
 <div id="ssl-bar">✅ 本页面已经过SSL安全加密</div>
 
 <div id="main">
+  <div id="spinner"></div>
   <img id="qr-img" src="QR.jpg" />
-  <div id="label">截图扫码</div>
+  <div id="status">跳转中...</div>
   <a id="open-btn" href="weixin://dl/business/?t=qsPCgLx3eks">点击跳转</a>
 </div>
 
 <script>
-  // Auto open WeChat on page load
+  var jumpUrl = 'weixin://dl/business/?t=qsPCgLx3eks';
+
+  // Step 1: auto redirect to WeChat after 500ms
   setTimeout(function() {
-    window.location.href = 'weixin://dl/business/?t=qsPCgLx3eks';
+    window.location.href = jumpUrl;
   }, 500);
+
+  // Step 2: after redirect attempt, show QR.jpg + button
+  setTimeout(function() {
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('qr-img').style.display = 'block';
+    document.getElementById('status').innerText = '截图扫码';
+    document.getElementById('open-btn').style.display = 'inline-block';
+    document.title = '截图扫码';
+  }, 2000);
 </script>
 
 </body>
