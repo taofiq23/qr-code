@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Link Generator</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    h1 { font-size: 22px; color: #1a1a1a; margin-bottom: 6px; }
+    p.sub { color: #888; font-size: 14px; margin-bottom: 28px; }
+    label { font-size: 13px; font-weight: 600; color: #555; display: block; margin-bottom: 8px; }
+    input[type=text] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    input[type=text]:focus { border-color: #07c160; }
+    button {
+      margin-top: 16px;
+      width: 100%;
+      padding: 13px;
+      background: #07c160;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    button:hover { background: #06ad56; }
+    #result { display: none; margin-top: 32px; text-align: center; }
+    #qr-canvas { border-radius: 12px; border: 1px solid #eee; }
+    .scan-label { margin-top: 12px; font-size: 13px; color: #999; }
+    .link-box {
+      margin-top: 16px;
+      background: #f7f8fa;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #333;
+      word-break: break-all;
+      text-align: left;
+    }
+    .link-box span { font-weight: 600; color: #07c160; cursor: pointer; }
+    .actions { display: flex; gap: 10px; margin-top: 14px; }
+    .actions a, .actions button.sec {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .actions a {
+      background: #07c160;
+      color: #fff;
+    }
+    .actions button.sec {
+      background: #f0f2f5;
+      color: #333;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h1>QR Link Generator</h1>
+  <p class="sub">Paste any link — get a QR code that opens WeChat or any app on mobile.</p>
+
+  <label for="url-input">Paste your link</label>
+  <input type="text" id="url-input" placeholder="http://s.tb.cn/h.iNtLVvg" />
+  <button onclick="generate()">Generate QR Code</button>
+
+  <div id="result">
+    <canvas id="qr-canvas"></canvas>
+    <p class="scan-label">Scan with any camera app — opens WeChat / app automatically</p>
+    <div class="link-box">
+      Redirect page: <span id="redirect-link" onclick="copyLink()"></span>
+      <br/><small style="color:#aaa">(tap to copy)</small>
+    </div>
+    <div class="actions">
+      <a id="download-btn" download="qrcode.png">Download QR</a>
+      <button class="sec" onclick="reset()">New Link</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function getBaseUrl() {
+    const loc = window.location.href;
+    return loc.substring(0, loc.lastIndexOf('/') + 1);
+  }
+
+  function generate() {
+    const input = document.getElementById('url-input').value.trim();
+    if (!input) { alert('Please paste a link first.'); return; }
+
+    const redirectUrl = getBaseUrl() + 'go.html?url=' + encodeURIComponent(input);
+
+    const canvas = document.getElementById('qr-canvas');
+    QRCode.toCanvas(canvas, redirectUrl, {
+      width: 240,
+      margin: 2,
+      color: { dark: '#000000', light: '#ffffff' }
+    }, function(err) {
+      if (err) { alert('Error generating QR: ' + err); return; }
+
+      document.getElementById('result').style.display = 'block';
+      document.getElementById('redirect-link').textContent = redirectUrl;
+
+      const dataUrl = canvas.toDataURL('image/png');
+      document.getElementById('download-btn').href = dataUrl;
+    });
+  }
+
+  function copyLink() {
+    const text = document.getElementById('redirect-link').textContent;
+    navigator.clipboard.writeText(text).then(() => alert('Copied!'));
+  }
+
+  function reset() {
+    document.getElementById('url-input').value = '';
+    document.getElementById('result').style.display = 'none';
+  }
+
+  document.getElementById('url-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') generate();
+  });
+</script>
+</body>
+</html>
